@@ -144,7 +144,7 @@ export async function POST(req) {
       .join("")
       .trim();
 
-    const actions = (response.content || [])
+    let actions = (response.content || [])
       .filter((block) => block.type === "tool_use" && block.input)
       .flatMap((block) => {
         if (
@@ -193,6 +193,32 @@ export async function POST(req) {
         }
         return [];
       });
+
+    // Fallback: sometimes the model says it added a task in text but forgets
+    // to call the add_task tool. Try to infer a single task from the message.
+    if ((!actions || actions.length === 0) && assistantText) {
+      // Examples we try to catch:
+      // "Added Psych Quiz for 3/14/26."
+      // "Added task Psych Quiz for DUE TMR."
+      // "Ok, added Psych Quiz due 3/14/26."
+      const addRegex =
+        /added\s+(?:task\s+)?(.+?)\s+(?:for|due)\s+((?:DUE TODAY|DUE TMR|\d{1,2}\/\d{1,2}\/\d{2}))/i;
+      const match = assistantText.match(addRegex);
+      if (match) {
+        const [, rawTitle, rawDueLabel] = match;
+        const title = rawTitle.trim();
+        const dueLabel = rawDueLabel.trim().toUpperCase();
+        if (title && dueLabel) {
+          actions = [
+            {
+              type: "add_task",
+              title,
+              dueLabel,
+            },
+          ];
+        }
+      }
+    }
 
     return NextResponse.json({
       message: assistantText || "Done.",

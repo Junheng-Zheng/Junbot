@@ -79,7 +79,9 @@ export default function Home() {
     window.addEventListener("load", () => {
       navigator.serviceWorker
         .register("/sw.js")
-        .catch((err) => console.error("Service worker registration failed:", err));
+        .catch((err) =>
+          console.error("Service worker registration failed:", err),
+        );
     });
   }, []);
 
@@ -147,7 +149,7 @@ export default function Home() {
       <Nav setSelectedTab={setSelectedTab} selectedTab={selectedTab} />
       <div className="text-xs pb-12  flex text-gray0 p-4 bg-black justify-between">
         <p className="mono">[JUNBOT]</p>
-        <p className="mono">ALL RIGHTS RESERVED . 2026</p>
+        <p className="mono">ALL RIGHTS RESERVED 2026</p>
       </div>
     </div>
   );
@@ -280,6 +282,12 @@ const MessagesTab = ({
     scrollRef.current?.scrollTo(0, scrollRef.current.scrollHeight);
   }, [messages]);
 
+  const handleNewChat = () => {
+    setMessages(INITIAL_MESSAGES);
+    setInput("");
+    setError(null);
+  };
+
   const handleSend = async () => {
     const text = input.trim();
     if (!text || isLoading) return;
@@ -331,8 +339,11 @@ const MessagesTab = ({
 
   return (
     <>
-      <div className="p-4 flex gap-3  border-b-2 border-white/5">
+      <div className="p-4 flex items-center justify-between gap-3 border-b-2 border-white/5">
         <p className="text-2xl uppercase text-gray0 font-extrabold">MESSAGES</p>
+        <IconButton onClick={handleNewChat} className="message gray0">
+          <Plus />
+        </IconButton>
       </div>
       <div
         ref={scrollRef}
@@ -399,19 +410,27 @@ const CalendarTab = ({ tasks, setTasks, completingId, setCompletingId }) => {
       <div className="p-4 flex gap-3  border-b-2 border-white/5">
         <p className="text-2xl uppercase text-gray0 font-extrabold">TASKS</p>
       </div>
-      <div
-        ref={listRef}
-        className="grid flex-1 grid-cols-2 gap-3 p-4 content-start"
-      >
-        {tasks.map((task) => (
-          <TaskCard
-            key={task.id}
-            task={task}
-            isCompleting={completingId === task.id}
-            onDone={handleTaskDone}
-          />
-        ))}
-      </div>
+      {tasks.length > 0 ? (
+        <div
+          ref={listRef}
+          className="grid flex-1 grid-cols-2 gap-3 p-4 content-start"
+        >
+          {tasks.map((task) => (
+            <TaskCard
+              key={task.id}
+              task={task}
+              isCompleting={completingId === task.id}
+              onDone={handleTaskDone}
+            />
+          ))}
+        </div>
+      ) : (
+        <div className="flex-1 flex items-center justify-center">
+          <p className="text-gray0 text-2xl font-extrabold uppercase opacity-10">
+            No tasks found
+          </p>
+        </div>
+      )}
     </>
   );
 };
