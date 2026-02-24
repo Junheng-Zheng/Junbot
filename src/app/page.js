@@ -2,6 +2,7 @@
 import { useState, useRef, useEffect } from "react";
 import { autoAnimate } from "@formkit/auto-animate";
 import Link from "next/link";
+import Image from "next/image";
 import {
   SendHorizontal,
   MessageSquare,
@@ -71,18 +72,23 @@ export default function Home() {
     setStored(STORAGE_KEYS.highlight, highlightColor);
   }, [highlightColor]);
 
-  // Basic service worker registration for PWA/offline support.
+  // Disable service worker caching by unregistering any existing workers.
   useEffect(() => {
     if (typeof window === "undefined") return;
     if (!("serviceWorker" in navigator)) return;
 
-    window.addEventListener("load", () => {
-      navigator.serviceWorker
-        .register("/sw.js")
-        .catch((err) =>
-          console.error("Service worker registration failed:", err),
-        );
-    });
+    navigator.serviceWorker
+      .getRegistrations()
+      .then((registrations) => {
+        registrations.forEach((registration) => {
+          registration.unregister().catch(() => {
+            // ignore unregister errors
+          });
+        });
+      })
+      .catch(() => {
+        // ignore errors querying registrations
+      });
   }, []);
 
   const onAddTask = ({ title, dueLabel }) => {
@@ -116,40 +122,48 @@ export default function Home() {
     completingId != null ? tasks.filter((t) => t.id !== completingId) : tasks;
 
   return (
-    <div
-      className="w-full fixed text-lg h-dvh flex flex-col bg"
-      style={{ "--highlight-color": highlightColor }}
-    >
-      {selectedTab === "messages" && (
-        <MessagesTab
-          messages={messages}
-          setMessages={setMessages}
-          tasks={tasksForChat}
-          onAddTask={onAddTask}
-          onAddTasks={onAddTasks}
-          onCompleteTask={onCompleteTask}
-          setSelectedTab={setSelectedTab}
-        />
-      )}
-      {selectedTab === "calendar" && (
-        <CalendarTab
-          tasks={tasks}
-          setTasks={setTasks}
-          completingId={completingId}
-          setCompletingId={setCompletingId}
-        />
-      )}
-      {selectedTab === "settings" && (
-        <SettingsTab
-          highlightColor={highlightColor}
-          setHighlightColor={setHighlightColor}
-        />
-      )}
+    <div className="xl:flex xl:fixed bg flex-col justify-center items-center w-full h-dvh">
+      <Image
+        src="/background.png"
+        alt="bg"
+        fill
+        className="object-cover hidden xl:block object-center brightness-50"
+      />
+      <div
+        className="xl:w-[402px] xl:scale-80 xl:rounded-xl xl:outline-3  xl:min-h-[800px] xl:shadow-2xl shadow-black   xl:overflow-hidden outline-white/10 w-full  text-lg h-dvh flex flex-col bg"
+        style={{ "--highlight-color": highlightColor }}
+      >
+        {selectedTab === "messages" && (
+          <MessagesTab
+            messages={messages}
+            setMessages={setMessages}
+            tasks={tasksForChat}
+            onAddTask={onAddTask}
+            onAddTasks={onAddTasks}
+            onCompleteTask={onCompleteTask}
+            setSelectedTab={setSelectedTab}
+          />
+        )}
+        {selectedTab === "calendar" && (
+          <CalendarTab
+            tasks={tasks}
+            setTasks={setTasks}
+            completingId={completingId}
+            setCompletingId={setCompletingId}
+          />
+        )}
+        {selectedTab === "settings" && (
+          <SettingsTab
+            highlightColor={highlightColor}
+            setHighlightColor={setHighlightColor}
+          />
+        )}
 
-      <Nav setSelectedTab={setSelectedTab} selectedTab={selectedTab} />
-      <div className="text-xs pb-12  flex text-gray0 p-4 bg-black justify-between">
-        <p className="mono">[JUNBOT]</p>
-        <p className="mono">ALL RIGHTS RESERVED 2026</p>
+        <Nav setSelectedTab={setSelectedTab} selectedTab={selectedTab} />
+        <div className="text-xs pb-12  flex text-gray0 p-4 bg-black justify-between">
+          <p className="mono">[JUNBOT]</p>
+          <p className="mono">ALL RIGHTS RESERVED 2026</p>
+        </div>
       </div>
     </div>
   );
@@ -340,7 +354,7 @@ const MessagesTab = ({
   return (
     <>
       <div className="p-4 flex items-center justify-between gap-3 border-b-2 border-white/5">
-        <p className="text-2xl uppercase text-gray0 font-extrabold">MESSAGES</p>
+        <p className="text-2xl uppercase text-gray0 font-extrabold">CHAT</p>
         <IconButton onClick={handleNewChat} className="message gray0">
           <Plus />
         </IconButton>
@@ -407,8 +421,46 @@ const CalendarTab = ({ tasks, setTasks, completingId, setCompletingId }) => {
 
   return (
     <>
-      <div className="p-4 flex gap-3  border-b-2 border-white/5">
+      <div className="p-4 relative flex items-center justify-between gap-3 border-b-2 border-white/5">
         <p className="text-2xl uppercase text-gray0 font-extrabold">TASKS</p>
+        <IconButton className="message gray0">
+          <GripVertical />
+        </IconButton>
+        <div className="absolute w-full h-fit max-h-[0px] overflow-y-auto flex flex-col  message bottom-0  z-10 translate-y-full left-0">
+          <div className="flex flex-col gap-3 p-4 ">
+            <p className="text-lg uppercase text-gray0 font-extrabold">Sort</p>
+            <div className="flex  gap-2">
+              <button className="flex-1 py-2 bg text-xs mono uppercase rounded-lg border-2 border-white/10">
+                Recent
+              </button>
+              <button className="flex-1 py-2 bg text-xs mono uppercase rounded-lg">
+                Due Date
+              </button>
+              <button className="flex-1 py-2 bg text-xs mono uppercase rounded-lg ">
+                Priority
+              </button>
+            </div>
+          </div>
+          <div className="flex flex-col gap-3 p-4  nav">
+            <p className="text-lg uppercase text-gray0 font-extrabold">
+              Priority
+            </p>
+            <div className="flex  gap-2">
+              <button className="flex-1 py-2 bg text-xs mono uppercase rounded-lg border-2 border-white/10">
+                All
+              </button>
+              <button className="flex-1 py-2 bg text-xs mono uppercase rounded-lg">
+                High
+              </button>
+              <button className="flex-1 py-2 bg text-xs mono uppercase rounded-lg">
+                Medium
+              </button>
+              <button className="flex-1 py-2 bg text-xs mono uppercase rounded-lg">
+                Low
+              </button>
+            </div>
+          </div>
+        </div>
       </div>
       {tasks.length > 0 ? (
         <div
