@@ -130,7 +130,7 @@ export default function Home() {
         className="object-cover hidden xl:block object-center brightness-50"
       />
       <div
-        className="xl:w-[402px] xl:scale-80 xl:rounded-xl xl:outline-3  xl:min-h-[800px] xl:shadow-2xl shadow-black   xl:overflow-hidden outline-white/10 w-full  text-lg h-dvh flex flex-col bg"
+        className="xl:w-[402px] xl:scale-80 xl:rounded-xl xl:outline-3 fixed xl:relative xl:min-h-[800px] xl:shadow-2xl shadow-black   xl:overflow-hidden outline-white/10 w-full  text-lg h-dvh flex flex-col bg"
         style={{ "--highlight-color": highlightColor }}
       >
         {selectedTab === "messages" && (
