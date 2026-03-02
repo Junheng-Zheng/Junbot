@@ -142,8 +142,9 @@ export default function Home() {
               Junbot is a PWA I made for myself to manage my terrible time
               managment skills. It was created with React + Nextjs, Tailwind
               CSS, custom backend API for the chatbot utillizing Claude Haiku 4,
-              and deployed on Vercel. Inspired by openclaw. Open on a mobile
-              device and add it to your home screen for the best experience.
+              and deployed on Vercel. Inspired by openclaw. You can try it on
+              the right, but it&apos;s really made for me so I wouldn&apos;t
+              expect too much haha.
             </p>
           </div>
           <div className="flex flex-col gap-3">
