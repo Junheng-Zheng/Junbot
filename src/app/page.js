@@ -10,6 +10,7 @@ import {
   GripVertical,
   Check,
   Plus,
+  ChevronDown,
 } from "lucide-react";
 
 const INITIAL_MESSAGES = [];
@@ -122,47 +123,85 @@ export default function Home() {
     completingId != null ? tasks.filter((t) => t.id !== completingId) : tasks;
 
   return (
-    <div className="xl:flex xl:fixed bg flex-col justify-center items-center w-full h-dvh">
-      <Image
-        src="/background.png"
-        alt="bg"
-        fill
-        className="object-cover hidden xl:block object-center brightness-50"
-      />
-      <div
-        className="xl:w-[402px] xl:scale-80 xl:rounded-xl xl:outline-3 fixed xl:relative xl:min-h-[800px] xl:shadow-2xl shadow-black   xl:overflow-hidden outline-white/10 w-full  text-lg h-dvh flex flex-col bg"
-        style={{ "--highlight-color": highlightColor }}
-      >
-        {selectedTab === "messages" && (
-          <MessagesTab
-            messages={messages}
-            setMessages={setMessages}
-            tasks={tasksForChat}
-            onAddTask={onAddTask}
-            onAddTasks={onAddTasks}
-            onCompleteTask={onCompleteTask}
-            setSelectedTab={setSelectedTab}
-          />
-        )}
-        {selectedTab === "calendar" && (
-          <CalendarTab
-            tasks={tasks}
-            setTasks={setTasks}
-            completingId={completingId}
-            setCompletingId={setCompletingId}
-          />
-        )}
-        {selectedTab === "settings" && (
-          <SettingsTab
-            highlightColor={highlightColor}
-            setHighlightColor={setHighlightColor}
-          />
-        )}
+    <div className="flex w-full h-dvh">
+      <div className="w-1/2 bg-white text-black hidden xl:flex relative flex-col items-center justify-center">
+        <p className="text-xs uppercase left-1/2 -translate-x-1/2 mono absolute bottom-8 opacity-60">
+          [Created by{" "}
+          <Link
+            className="underline underline-offset-4 hover:italic"
+            href="https://junheng.dev/"
+          >
+            Junheng Zheng
+          </Link>
+          ]
+        </p>
+        <div className="flex w-1/2 flex-col gap-12">
+          <div className="flex flex-col gap-2">
+            <p className="text-xs uppercase mono">[Synopsis]</p>
+            <p className=" text-sm">
+              Junbot is a PWA I made for myself to manage my terrible time
+              managment skills. It was created with React + Nextjs, Tailwind
+              CSS, custom backend API for the chatbot utillizing Claude Haiku 4,
+              and deployed on Vercel. Inspired by openclaw. Open on a mobile
+              device and add it to your home screen for the best experience.
+            </p>
+          </div>
+          <div className="flex flex-col gap-2">
+            <p className="text-xs uppercase mono">[Features]</p>
+            <p className="text-sm">
+              Directly ask Junbot to add tasks to your calendar.
+            </p>
+            <p className="text-sm">
+              Access to coursework/more and save upcoming tasks.
+            </p>
+            <p className="text-sm">
+              Junbot sends notifications on upcoming tasks.
+            </p>
+          </div>
+        </div>
+      </div>
+      <div className="xl:flex bg relative flex-col justify-center items-center xl:w-1/2 w-full h-full">
+        <Image
+          src="/background.png"
+          alt="bg"
+          fill
+          className="object-cover hidden xl:block object-center brightness-50"
+        />
+        <div
+          className="xl:w-[402px] xl:scale-80 xl:rounded-xl xl:outline-3 fixed xl:relative xl:max-h-200 xl:shadow-2xl shadow-black   xl:overflow-hidden outline-white/10 w-full  text-lg h-dvh flex flex-col bg"
+          style={{ "--highlight-color": highlightColor }}
+        >
+          {selectedTab === "messages" && (
+            <MessagesTab
+              messages={messages}
+              setMessages={setMessages}
+              tasks={tasksForChat}
+              onAddTask={onAddTask}
+              onAddTasks={onAddTasks}
+              onCompleteTask={onCompleteTask}
+              setSelectedTab={setSelectedTab}
+            />
+          )}
+          {selectedTab === "calendar" && (
+            <CalendarTab
+              tasks={tasks}
+              setTasks={setTasks}
+              completingId={completingId}
+              setCompletingId={setCompletingId}
+            />
+          )}
+          {selectedTab === "settings" && (
+            <SettingsTab
+              highlightColor={highlightColor}
+              setHighlightColor={setHighlightColor}
+            />
+          )}
 
-        <Nav setSelectedTab={setSelectedTab} selectedTab={selectedTab} />
-        <div className="text-xs pb-12  flex text-gray0 p-4 bg-black justify-between">
-          <p className="mono">[JUNBOT]</p>
-          <p className="mono">ALL RIGHTS RESERVED 2026</p>
+          <Nav setSelectedTab={setSelectedTab} selectedTab={selectedTab} />
+          <div className="text-xs pb-12  flex text-gray0 p-4 bg-black justify-between">
+            <p className="mono">[JUNBOT]</p>
+            <p className="mono">ALL RIGHTS RESERVED 2026</p>
+          </div>
         </div>
       </div>
     </div>
