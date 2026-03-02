@@ -124,7 +124,7 @@ export default function Home() {
 
   return (
     <div className="flex w-full h-dvh">
-      <div className="w-1/2 bg-white text-black hidden xl:flex relative flex-col items-center justify-center">
+      <div className="w-1/2 bg-black text-white hidden xl:flex relative flex-col items-center justify-center">
         <p className="text-xs uppercase left-1/2 -translate-x-1/2 mono absolute bottom-8 opacity-60">
           [Created by{" "}
           <Link
@@ -136,7 +136,7 @@ export default function Home() {
           ]
         </p>
         <div className="flex w-1/2 flex-col gap-12">
-          <div className="flex flex-col gap-2">
+          <div className="flex flex-col gap-3">
             <p className="text-xs uppercase mono">[Synopsis]</p>
             <p className=" text-sm">
               Junbot is a PWA I made for myself to manage my terrible time
@@ -146,17 +146,22 @@ export default function Home() {
               device and add it to your home screen for the best experience.
             </p>
           </div>
-          <div className="flex flex-col gap-2">
+          <div className="flex flex-col gap-3">
             <p className="text-xs uppercase mono">[Features]</p>
-            <p className="text-sm">
-              Directly ask Junbot to add tasks to your calendar.
-            </p>
-            <p className="text-sm">
-              Access to coursework/more and save upcoming tasks.
-            </p>
-            <p className="text-sm">
-              Junbot sends notifications on upcoming tasks.
-            </p>
+            <div className="flex flex-col gap-2">
+              <div className="text-sm flex gap-2 items-center">
+                <div className="w-1.5 aspect-square rounded-full bg-lime-500" />
+                Directly ask Junbot to add tasks to your calendar.
+              </div>
+              <div className="text-sm flex gap-2 items-center">
+                <div className="w-1.5 aspect-square rounded-full bg-lime-500" />
+                Find and save upcoming tasks.
+              </div>
+              <div className="text-sm flex gap-2 items-center">
+                <div className="w-1.5 aspect-square rounded-full bg-lime-500" />
+                Junbot sends notifications on upcoming tasks.
+              </div>
+            </div>
           </div>
         </div>
       </div>
